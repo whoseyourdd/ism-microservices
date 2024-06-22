@@ -5,7 +5,8 @@ ISM is an microservices for management of student, classrooms, and grades with a
 
 - **Student Management:** Efficiently add, update, and delete student records with ease.
 - **User Management:** Seamlessly manage user accounts and permissions for enhanced control.
-- **Classroom Management:** Easily add, update, and delete class grades and classroom records with ease.
+- **Classroom Management:** Easily add, update, and delete and classroom records with ease.
+- **Grade Management:** Easily add, update, and delete and grades level for each classrooms records with ease.
 
 ## Technologies Used
 
