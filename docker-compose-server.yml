@@ -1,0 +1,55 @@
+services:
+  configapp:
+    container_name: configapp
+    build:
+      context: configapp
+      dockerfile: Dockerfile.configapp
+    environment:
+      - PORT=8888
+    ports:
+      - "8888:8888"
+    restart: on-failure
+    networks:
+      - ism
+
+  eureka:
+    container_name: eureka
+    build:
+      context: discoveryserver
+      dockerfile: Dockerfile.discoveryserver
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_HOST=configapp
+      - PORT=8761
+    ports:
+      - "8761:8761"
+    restart: on-failure
+    depends_on:
+      configapp:
+        condition: service_started
+    networks:
+      - ism
+
+  gateway:
+    container_name: gateway
+    build:
+      context: gateway
+      dockerfile: Dockerfile.gateway
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_HOST=configapp
+      - EUREKA_HOST=eureka
+      - PORT=8080
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    depends_on:
+      eureka:
+        condition: service_started
+    networks:
+      - ism
+
+networks:
+  ism:
+    external: true
+
