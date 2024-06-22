@@ -1,6 +1,6 @@
 services:
   student:
-    container_name: student
+    container_name: ${API_CONTAINER_NAME_STUDENT}
     build:
       context: student
       dockerfile: Dockerfile.student
@@ -21,6 +21,32 @@ services:
       configapp:
         condition: service_started
       postgres-student:
+        condition: service_started
+    networks:
+      - ism
+
+  classroom:
+    container_name: ${API_CONTAINER_NAME_CLASSROOM}
+    build:
+      context: classroom
+      dockerfile: Dockerfile.classroom
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - CONFIG_HOST=${SERVER_CONTAINER_NAME_CONFIGAPP}
+      - EUREKA_HOST=${SERVER_CONTAINER_NAME_DISCOVERYSERVER}
+      - DB_HOST=${DB_CONTAINER_NAME_CLASSROOM}
+      - STUDENT_MS=${API_CONTAINER_NAME_STUDENT}
+      - TEACHER_MS=${API_CONTAINER_NAME_TEACHER}
+      - PORT=${API_INTERNAL_PORT}
+    ports:
+      - "${API_EXTERNAL_PORT_STUDENT}:${API_INTERNAL_PORT}"
+    restart: on-failure
+    depends_on:
+      eureka:
+        condition: service_started
+      configapp:
+        condition: service_started
+      postgres-classroom:
         condition: service_started
     networks:
       - ism

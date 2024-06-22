@@ -23,7 +23,7 @@ public class GradeMapper {
 	public GradeDto ToGradeDto(Grade grade) {
 		List<ClassroomDto> classrooms = new ArrayList<>();
 		for(Classroom cr: grade.getClassrooms()) {
-			ClassroomDto classroom = classroomMapper.ToClassroomDto(cr, grade, null, null);
+			ClassroomDto classroom = classroomMapper.ToClassroomDto(cr, grade, null);
 			classrooms.add(classroom);
 		}
 		return GradeDto.builder()

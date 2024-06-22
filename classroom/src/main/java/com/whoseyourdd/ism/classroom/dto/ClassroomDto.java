@@ -24,7 +24,6 @@ public class ClassroomDto {
 	private String classroomName;
 	private int gradeLevelId;
 	private String gradeLevel;
-	private TeacherDto homeroomTeacher;
 	private List<StudentDto> students;
 	
 }

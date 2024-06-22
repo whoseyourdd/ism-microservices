@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 import com.whoseyourdd.ism.classroom.dto.ClassroomDto;
 import com.whoseyourdd.ism.classroom.dto.StudentDto;
-import com.whoseyourdd.ism.classroom.dto.TeacherDto;
 import com.whoseyourdd.ism.classroom.model.Classroom;
 import com.whoseyourdd.ism.classroom.model.Grade;
 
@@ -16,14 +15,13 @@ import com.whoseyourdd.ism.classroom.model.Grade;
 @Component
 public class ClassroomMapper {
 	
-	public ClassroomDto ToClassroomDto(Classroom classroom, Grade grade, List<StudentDto> students, TeacherDto teacher) {
+	public ClassroomDto ToClassroomDto(Classroom classroom, Grade grade, List<StudentDto> students) {
 		return ClassroomDto.builder()
 			.classroomId(classroom.getClassroomId())
 			.classroomName(classroom.getClassroomName())
 			.gradeLevelId(grade.getGradeId())
 			.gradeLevel(grade.getGradeLevel())
 			.students(students)
-			.homeroomTeacher(teacher)
       .build();
   }
 

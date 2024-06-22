@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 
 import com.whoseyourdd.ism.student.dto.ClassroomDto;
 import com.whoseyourdd.ism.student.dto.StudentDto;
-import com.whoseyourdd.ism.student.dto.TeacherDto;
 import com.whoseyourdd.ism.student.model.Student;
 
 /**

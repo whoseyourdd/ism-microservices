@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.whoseyourdd.ism.classroom.dto.ClassroomDto;
 import com.whoseyourdd.ism.classroom.dto.StudentDto;
-import com.whoseyourdd.ism.classroom.dto.TeacherDto;
 import com.whoseyourdd.ism.classroom.external.StudentService;
-import com.whoseyourdd.ism.classroom.external.TeacherService;
 import com.whoseyourdd.ism.classroom.model.Classroom;
 import com.whoseyourdd.ism.classroom.model.Grade;
 import com.whoseyourdd.ism.classroom.repository.ClassroomRepository;
@@ -35,9 +33,6 @@ public class ClassroomServiceImpl implements ClassroomService{
 	private StudentService studentService;
 
 	@Autowired
-	private TeacherService teacherService;
-
-	@Autowired
 	private ClassroomMapper classroomMapper;
 
 	@Override
@@ -46,7 +41,7 @@ public class ClassroomServiceImpl implements ClassroomService{
 			List<Classroom> classrooms = classroomRepository.findAll();
 			List<ClassroomDto> result = new ArrayList<>();
 			for(Classroom c : classrooms){
-				ClassroomDto classroom = classroomMapper.ToClassroomDto(c, c.getGrade(), null, null);
+				ClassroomDto classroom = classroomMapper.ToClassroomDto(c, c.getGrade(), null);
 				result.add(classroom);
 			}
 			return result;
@@ -62,9 +57,8 @@ public class ClassroomServiceImpl implements ClassroomService{
 			if(c == null){
 				throw new ErrNotFoundException("Classroom with id " + id + " does not exist");
 			}
-			TeacherDto teacher = teacherService.findTeacherByClassroomId(c.getClassroomId());
 			List<StudentDto> students = studentService.findAllStudentsByClassroomId(c.getClassroomId());
-			ClassroomDto classroom = classroomMapper.ToClassroomDto(c, c.getGrade(), students, teacher);
+			ClassroomDto classroom = classroomMapper.ToClassroomDto(c, c.getGrade(), students);
 			return classroom;
 		}catch(ErrNotFoundException e){
 			throw e;
@@ -79,7 +73,7 @@ public class ClassroomServiceImpl implements ClassroomService{
 			List<Classroom> classrooms = classroomRepository.findByGradeId(gradeId);
 			List<ClassroomDto> result = new ArrayList<>();
 			for(Classroom c : classrooms){
-				ClassroomDto classroom = classroomMapper.ToClassroomDto(c, c.getGrade(), null, null);
+				ClassroomDto classroom = classroomMapper.ToClassroomDto(c, c.getGrade(), null);
 				result.add(classroom);
 			}
 			return result;
@@ -97,7 +91,7 @@ public class ClassroomServiceImpl implements ClassroomService{
 				throw new ErrNotFoundException("Grade with id " + c.getGradeId() + " does not exist");
 			}
 			Classroom newClass = classroomRepository.save(c);
-			return classroomMapper.ToClassroomDto(newClass, g, null, null);
+			return classroomMapper.ToClassroomDto(newClass, g, null);
 		}catch(ErrNotFoundException e){
 			throw e;
 		}catch(Exception e){
@@ -113,6 +107,22 @@ public class ClassroomServiceImpl implements ClassroomService{
 				throw new ErrNotFoundException("Classroom with id " + id + " does not exist");
 			}
 		classroomRepository.delete(c);
+		}catch(ErrNotFoundException e){
+			throw e;
+		}catch(Exception e){
+			throw new Exception("Internal server error: " + e.getMessage());
+		}
+	}
+
+	@Override
+	public ClassroomDto updateClassroom(ClassroomDto classroomDto) throws Exception {
+		try{
+			Classroom c = classroomRepository.findById(classroomDto.getClassroomId()).orElse(null);
+      if(c == null){
+        throw new ErrNotFoundException("Classroom with id " + classroomDto.getClassroomId() + " does not exist");
+      }
+      Classroom newClass = classroomRepository.save(classroomMapper.ToClassroomModel(classroomDto));
+      return classroomMapper.ToClassroomDto(newClass, c.getGrade(), null);
 		}catch(ErrNotFoundException e){
 			throw e;
 		}catch(Exception e){

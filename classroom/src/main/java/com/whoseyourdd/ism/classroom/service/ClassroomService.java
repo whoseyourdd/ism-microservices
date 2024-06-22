@@ -13,6 +13,7 @@ public interface ClassroomService {
 	List<ClassroomDto> findClassroomByGrade(int gradeId) throws Exception;
 	ClassroomDto findClassroomById(int id) throws Exception;
 	ClassroomDto addClassroom(ClassroomDto classroomDto) throws Exception;
+	ClassroomDto updateClassroom(ClassroomDto classroomDto) throws Exception;
 
   void deleteClassroom(int id) throws Exception;
 }

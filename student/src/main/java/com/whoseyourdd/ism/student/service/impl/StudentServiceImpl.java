@@ -52,11 +52,13 @@ public class StudentServiceImpl implements StudentService {
 		try{
 			Student student = studentRepository.findById(id).orElse(null);
 			if(student == null) {
-				return null;
+				throw new ErrNotFoundException("Student with id: "+id+" does not exist");
 			}
 			ClassroomDto classroom = classroomService.findClassroomById(student.getClassroomId());
 		  StudentDto result = studentMapper.ToStudentDto(student, classroom);
 			return result;
+		}catch(ErrNotFoundException e){
+			throw e;
 		}catch(Exception e){
 			throw new ErrInternalException("Internal server error: " + e.getMessage());
 		}
@@ -86,6 +88,8 @@ public class StudentServiceImpl implements StudentService {
 			}
 			s = studentRepository.save(studentMapper.ToStudentModel(student));
 			return studentMapper.ToStudentDto(s, classroom);
+		}catch(ErrNotFoundException e){
+			throw e;
 		}catch(Exception e){
       throw new ErrInternalException("Internal server error: " + e.getMessage());
     }
@@ -99,6 +103,8 @@ public class StudentServiceImpl implements StudentService {
 				throw new ErrNotFoundException("Student with id " + id + " does not exist");
 			}
 			studentRepository.delete(s);
+		}catch(ErrNotFoundException e){
+			throw e;
 		}catch(Exception e){
       throw new ErrInternalException("Internal server error: " + e.getMessage());
     }
@@ -133,6 +139,8 @@ public class StudentServiceImpl implements StudentService {
 			s.setClassroomId(enrollStudetDto.getClassroomId());
 			s = studentRepository.save(s);
 			return studentMapper.ToStudentDto(s, c);
+		}catch(ErrNotFoundException e){
+			throw e;
 		}catch(Exception e){
 			throw new ErrInternalException("Internal server error: " + e.getMessage());
 		}
