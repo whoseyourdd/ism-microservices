@@ -1,0 +1,52 @@
+services:
+  postgres-classroom:
+    image: postgres:14.1-alpine
+    container_name: ${DB_CONTAINER_NAME_CLASSROOM}
+    hostname: postgres-classroom
+    environment:
+      - POSTGRES_DB=${CLASSROOM_DB_NAME}
+      - POSTGRES_USER=${CLASSROOM_DB_USER}
+      - POSTGRES_PASSWORD=${CLASSROOM_DB_PASS}
+    ports:
+      - "${CLASSROOM_DB_LOCAL_PORT}:5432"
+    volumes:
+      - ./.docker/pg_classroom_data:/var/lib/postgresql/data
+      - ./.docker/schema/classroom:/docker-entrypoint-initdb.d
+    networks:
+      - ism
+
+  postgres-student:
+    image: postgres:14.1-alpine
+    container_name: ${DB_CONTAINER_NAME_STUDENT}
+    hostname: postgres-student
+    environment:
+      - POSTGRES_DB=${STUDENT_DB_NAME}
+      - POSTGRES_USER=${STUDENT_DB_USER}
+      - POSTGRES_PASSWORD=${STUDENT_DB_PASS}
+    ports:
+      - "${STUDENT_DB_LOCAL_PORT}:5432"
+    volumes:
+      - ./.docker/pg_student_data:/var/lib/postgresql/data
+      - ./.docker/schema/student:/docker-entrypoint-initdb.d
+    networks:
+      - ism
+
+  postgres-user:
+    image: postgres:14.1-alpine
+    container_name: ${DB_CONTAINER_NAME_USER}
+    hostname: postgres-user
+    environment:
+      - POSTGRES_DB=${USER_DB_NAME}
+      - POSTGRES_USER=${USER_DB_USER}
+      - POSTGRES_PASSWORD=${USER_DB_PASS}
+    ports:
+      - "${USER_DB_LOCAL_PORT}:5432"
+    volumes:
+      - ./.docker/pg_user_data:/var/lib/postgresql/data
+      - ./.docker/schema/user:/docker-entrypoint-initdb.d
+    networks:
+      - ism
+
+networks:
+  ism:
+    external: true
